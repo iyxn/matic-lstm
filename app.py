@@ -21,7 +21,7 @@ st.write("Harga Saat Ini: ",str(weekly_data["close"].iloc[-1]))
 
 col1, col2 = st.columns(2)
 
-def btc_line_chart():
+def matic_line_chart():
 	with col1:
 		st.line_chart(data = weekly_data, x = "timestamp", y = "close",use_container_width=True)
 	
@@ -33,4 +33,4 @@ def btc_line_chart():
 	st.dataframe(weekly_data.sort_values(by="timestamp", ascending = True), width = 1500, height = 400)
 
 
-btc_line_chart()
+matic_line_chart()
