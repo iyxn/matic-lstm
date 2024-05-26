@@ -8,7 +8,9 @@ from utils.preprocessing import inverter
 import matplotlib.pyplot as plt
 
 st.set_page_config(
-    page_title = "Dashboard Forecasting", layout = "wide") 
+    page_title = "Dashboard Forecasting", layout = "wide")
+
+st.markdown("<h1 style='text-align: center; color: white;'>Dashboard Forecasting</h1>", unsafe_allow_html=True)
 
 data_prep = get_hourly_price()
 hourly_data, high_processed, low_processed, close_procesed = make_hourly(data_prep)
@@ -16,6 +18,8 @@ hourly_data, high_processed, low_processed, close_procesed = make_hourly(data_pr
 high_model = load_model("model/best_model_high.h5")
 low_model = load_model("model/best_model_low.h5")
 close_model = load_model("model/best_model_close.h5")
+
+col1, col2 = st.columns(2)
 
 def forecast():
     high_pred = high_model.predict(high_processed)
@@ -36,11 +40,17 @@ def chart(high_pred, low_pred, close_pred):
     plt.xlabel("Jam")
     plt.ylabel("Harga")
     plt.legend(loc = "upper right")
-    st.pyplot(plt)
+    with col1:
+        st.subheader("Grafik Prediksi 1 Jam Kedepan")
+        st.write("P.High:", high_pred, "P.low:", low_pred, "P.Close:", close_pred)
+        st.pyplot(plt)
 
 forecast()
 
-st.dataframe(hourly_data)
+with col2:
+    st.subheader("Comingsoon")    
+
+st.dataframe(hourly_data[["timestamp","open","high","low","close"]], height = 300, width = 450)
 
 
 

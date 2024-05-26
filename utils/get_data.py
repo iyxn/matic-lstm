@@ -29,7 +29,7 @@ def get_hourly_price():
 	df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
 	
 	data = df.sort_values(by="timestamp", ascending = True)
-	data = data[["timestamp","high","low","close"]]
+	data = data[["timestamp","open","high","low","close"]]
 
 	return data
 
