@@ -14,14 +14,17 @@ st.markdown("<h1 style='text-align: center; color: white;'>Dashboard Forecasting
 
 data_prep = get_hourly_price()
 hourly_data, high_processed, low_processed, close_procesed = make_hourly(data_prep)
-
-high_model = load_model("model/best_model_high.h5")
-low_model = load_model("model/best_model_low.h5")
-close_model = load_model("model/best_model_close.h5")
-
 col1, col2 = st.columns(2)
 
+@st.cache_resource
+def model():
+    high_model = load_model("model/best_model_high.h5")
+    low_model = load_model("model/best_model_low.h5")
+    close_model = load_model("model/best_model_close.h5")
+    
+    return high_model, low_model, close_model
 def forecast():
+    high_model, low_model, close_model = model()
     high_pred = high_model.predict(high_processed)
     low_pred = low_model.predict(low_processed)
     close_pred = close_model.predict(close_procesed)
@@ -32,14 +35,14 @@ def forecast():
 
 def chart(high_pred, low_pred, close_pred):
     plt.style.use('dark_background')
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(8,4))
     plt.plot(hourly_data["timestamp"], hourly_data["close"], label = "Harga Matic")
     plt.axhline(high_pred, color = "g", linestyle = "-", label = "Prediksi High")
     plt.axhline(low_pred, color = "r", linestyle ="-", label = "Prediksi Low")
     plt.axhline(close_pred, color = "b", linestyle ="-", label = "Prediksi Close")
     plt.xlabel("Jam")
     plt.ylabel("Harga")
-    plt.legend(loc = "upper right")
+    plt.legend(loc = "best")
     with col1:
         st.subheader("Grafik Prediksi 1 Jam Kedepan")
         st.write("P.High:", high_pred, "P.low:", low_pred, "P.Close:", close_pred)
@@ -48,10 +51,8 @@ def chart(high_pred, low_pred, close_pred):
 forecast()
 
 with col2:
-    st.subheader("Comingsoon")    
+    st.subheader("Prediksi Hari Ini")  
+    st.write("High: Low: Close: ")
+    st.pyplot(plt)  
 
 st.dataframe(hourly_data[["timestamp","open","high","low","close"]], height = 300, width = 450)
-
-
-
-
