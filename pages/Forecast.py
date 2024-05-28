@@ -1,9 +1,8 @@
 import streamlit as st
 from tensorflow.keras.models import load_model
-
+import plotly.graph_objects as go
 from utils.get_data import get_hourly_price
-from utils.preprocessing import make_hourly
-from utils.preprocessing import inverter
+from utils.preprocessing import make_hourly, inverter
 from utils.forecast_data import make_historical
 
 import matplotlib.pyplot as plt
@@ -15,7 +14,7 @@ st.markdown("<h1 style='text-align: center; color: white;'>Dashboard Forecasting
 
 data_prep = get_hourly_price()
 hourly_data, high_processed, low_processed, close_procesed = make_hourly(data_prep)
-col1, col2 = st.columns(2)
+
 
 @st.cache_resource
 def model():
@@ -36,26 +35,39 @@ def forecast():
     make_historical(hourly_data, predicted_data)
     chart(predicted_data)
 
+
+
 def chart(predicted_data):
-    plt.style.use('dark_background')
-    plt.figure(figsize=(8,4))
-    plt.plot(hourly_data["timestamp"], hourly_data["close"], label = "Harga Matic")
-    plt.axhline(predicted_data[0], color = "g", linestyle = "-", label = "Prediksi High")
-    plt.axhline(predicted_data[1], color = "r", linestyle ="-", label = "Prediksi Low")
-    plt.axhline(predicted_data[2], color = "b", linestyle ="-", label = "Prediksi Close")
-    plt.xlabel("Jam")
-    plt.ylabel("Harga")
-    plt.legend(loc = "best")
-    with col1:
-        st.subheader("Grafik Prediksi 1 Jam Kedepan")
-        st.write("P.High:", predicted_data[0], "P.low:", predicted_data[1], "P.Close:", predicted_data[2])
-        st.pyplot(plt)
+    # Create candle chart
+    candle_chart = go.Candlestick(x=hourly_data["timestamp"],
+                                  open=hourly_data["open"],
+                                  high=hourly_data["high"],
+                                  low=hourly_data["low"],
+                                  close=hourly_data["close"])
+
+    # Create line chart from predicted data
+    line_chart = go.Scatter(x=hourly_data["timestamp"],
+                            y=[predicted_data[0]] * len(hourly_data["timestamp"]),
+                            name="Prediksi High",
+                            line=dict(color="green", width=2))
+
+    line_chart_low = go.Scatter(x=hourly_data["timestamp"],
+                               y=[predicted_data[1]] * len(hourly_data["timestamp"]),
+                               name="Prediksi Low",
+                               line=dict(color="red", width=2))
+
+    line_chart_close = go.Scatter(x=hourly_data["timestamp"],
+                                y=[predicted_data[2]] * len(hourly_data["timestamp"]),
+                                name="Prediksi Close",
+                                line=dict(color="blue", width=2))
+
+    fig = go.Figure(data=[candle_chart, line_chart, line_chart_low, line_chart_close])
+    fig.update_layout(xaxis_rangeslider_visible=False)
+
+    st.subheader("Grafik Prediksi 1 Jam Kedepan")
+    st.write("P.High:", predicted_data[0], "P.low:", predicted_data[1], "P.Close:", predicted_data[2])
+    st.plotly_chart(fig)
 
 forecast()
-
-with col2:
-    st.subheader("Prediksi Hari Ini")  
-    st.write("High: Low: Close: ")
-    st.pyplot(plt)  
 
 st.dataframe(hourly_data[["timestamp","open","high","low","close"]], height = 300, width = 450)
