@@ -4,6 +4,7 @@ from tensorflow.keras.models import load_model
 from utils.get_data import get_hourly_price
 from utils.preprocessing import make_hourly
 from utils.preprocessing import inverter
+from utils.forecast_data import make_historical
 
 import matplotlib.pyplot as plt
 
@@ -30,22 +31,24 @@ def forecast():
     close_pred = close_model.predict(close_procesed)
     
     inverted_high, inverted_low, inverted_close = inverter(high_pred, low_pred, close_pred)
+    predicted_data = [inverted_high[0][0], inverted_low[0][0], inverted_close[0][0]]
+    
+    make_historical(hourly_data, predicted_data)
+    chart(predicted_data)
 
-    chart(inverted_high[0][0], inverted_low[0][0], inverted_close[0][0])
-
-def chart(high_pred, low_pred, close_pred):
+def chart(predicted_data):
     plt.style.use('dark_background')
     plt.figure(figsize=(8,4))
     plt.plot(hourly_data["timestamp"], hourly_data["close"], label = "Harga Matic")
-    plt.axhline(high_pred, color = "g", linestyle = "-", label = "Prediksi High")
-    plt.axhline(low_pred, color = "r", linestyle ="-", label = "Prediksi Low")
-    plt.axhline(close_pred, color = "b", linestyle ="-", label = "Prediksi Close")
+    plt.axhline(predicted_data[0], color = "g", linestyle = "-", label = "Prediksi High")
+    plt.axhline(predicted_data[1], color = "r", linestyle ="-", label = "Prediksi Low")
+    plt.axhline(predicted_data[2], color = "b", linestyle ="-", label = "Prediksi Close")
     plt.xlabel("Jam")
     plt.ylabel("Harga")
     plt.legend(loc = "best")
     with col1:
         st.subheader("Grafik Prediksi 1 Jam Kedepan")
-        st.write("P.High:", high_pred, "P.low:", low_pred, "P.Close:", close_pred)
+        st.write("P.High:", predicted_data[0], "P.low:", predicted_data[1], "P.Close:", predicted_data[2])
         st.pyplot(plt)
 
 forecast()
