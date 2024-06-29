@@ -10,7 +10,6 @@ Dashboard Harga, Peramalan Harga Bitcoin menggunakan model LSTM (Long Short Term
 ## Peramalan
 ![App Screenshot](https://raw.githubusercontent.com/iyxn/matic-lstm/development/screenshoot/forecast.jpg)
 
-
 # Instalasi
 
 Clone repository ini
