@@ -33,11 +33,11 @@ def forecast():
     predicted_data = [inverted_high[0][0], inverted_low[0][0], inverted_close[0][0]]
     
     make_historical(hourly_data, predicted_data)
+
     chart(predicted_data)
 
-
-
 def chart(predicted_data):
+    matic_now = hourly_data.iloc[-1]
     # Create candle chart
     candle_chart = go.Candlestick(x=hourly_data["timestamp"],
                                   open=hourly_data["open"],
@@ -65,9 +65,13 @@ def chart(predicted_data):
     fig.update_layout(xaxis_rangeslider_visible=False)
 
     st.subheader("Grafik Prediksi 1 Jam Kedepan")
-    st.write("P.High:", predicted_data[0], "P.low:", predicted_data[1], "P.Close:", predicted_data[2])
+    st.write("Harga Sekarang:", matic_now["close"])
+    st.write("Prediksi=","High:", predicted_data[0], "Low:", predicted_data[1], "Close:", predicted_data[2])
     st.plotly_chart(fig)
 
 forecast()
+st.subheader("Grafik Prediksi Hari Ini")
+st.write("Coming Soon!")
 
+st.subheader("Data Harga MATIC Hari Ini")
 st.dataframe(hourly_data[["timestamp","open","high","low","close"]], height = 300, width = 450)

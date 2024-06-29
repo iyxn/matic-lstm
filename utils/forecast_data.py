@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import numpy as np
 
 def make_historical(hourly_data, forecast_data):
     file_path = 'dataset/history_forecast.xlsx'
@@ -10,8 +11,6 @@ def make_historical(hourly_data, forecast_data):
     
     if os.path.exists(file_path):
         df = pd.read_excel(file_path)
-        print(str(timestamp))
-        print(df["timestamp"].astype(str).tolist())
         if timestamp not in df["timestamp"].tolist():
             df.loc[len(df)] = {"timestamp": timestamp,  "pred_high": pred_high, "pred_low": pred_low, "pred_close": pred_close}
             df.to_excel(file_path, index=False)

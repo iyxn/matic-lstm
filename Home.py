@@ -16,8 +16,8 @@ st.set_page_config(
     page_title = "Dashboard Utama", layout = "wide")
 
 st.markdown("<h1 style='text-align: center; color: white;'>Dashboard Utama</h1>", unsafe_allow_html=True)
-st.subheader("Grafik Harga Matic 7 Hari Terakhir dan Index Fear And Greed")
-st.write("Harga Saat Ini: ",str(weekly_data["close"].iloc[-1]))
+st.subheader("Grafik Harga MATIC 7 Hari Terakhir dan Index Fear And Greed")
+st.write("Harga Saat Ini: ",weekly_data["close"].iloc[-1], "High: ",weekly_data["high"].iloc[-1], "Low: ",weekly_data["low"].iloc[-1])
 
 col1, col2 = st.columns(2)
 
