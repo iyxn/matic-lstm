@@ -1,5 +1,5 @@
 
-# BTC LSTM
+# MATIC LSTM
 
 Dashboard Harga, Peramalan Harga MATIC nggunakan model LSTM (Long Short Term Memory). Model yang digunakan dapat memprediksi satu jam kedepan.
 
