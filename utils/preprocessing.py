@@ -13,7 +13,6 @@ def make_hourly(hourly_data):
 	high_processed = hourly_data["high_scaled"][-4:-1].values.reshape(1,3,1)
 	low_processed = hourly_data["low_scaled"][-4:-1].values.reshape(1,3,1)
 	close_processed = hourly_data["close_scaled"][-4:-1].values.reshape(1,3,1)
-	
 	return hourly_data, high_processed, low_processed, close_processed
 
 def inverter(high, low, close):
