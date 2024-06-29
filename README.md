@@ -17,7 +17,7 @@ Clone repository ini
 
 ```bash
   git clone https://github.com/hardianalkori/matic-lstm.git
-  cd btc-lstm
+  cd matic-lstm
 ```
 Install library yang diperlukan
 ```bash
